@@ -411,6 +411,7 @@ class UploadThread(QThread):
 
 class DragDropArea(QLabel):
     files_dropped = pyqtSignal(list)
+    clicked_signal = pyqtSignal()
 
     def __init__(self):
         super().__init__(_("drag_drop_text"))
@@ -426,6 +427,8 @@ class DragDropArea(QLabel):
             }
         """)
         self.setAcceptDrops(True)
+        # Enable cursor change on hover to indicate clickability
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
 
     def update_text(self):
         self.setText(_("drag_drop_text"))
@@ -468,17 +471,7 @@ class DragDropArea(QLabel):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            try:
-                files, _ = QFileDialog.getOpenFileNames(
-                    self, 
-                    _("file_dialog_title"), 
-                    "", 
-                    _("file_dialog_filter")
-                )
-                if files:
-                    self.files_dropped.emit(files)
-            except Exception as e:
-                print(f"File dialog error: {e}")
+            self.clicked_signal.emit()
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -532,6 +525,7 @@ class MainWindow(QMainWindow):
         # Drag Drop Area
         self.drop_area = DragDropArea()
         self.drop_area.files_dropped.connect(self.process_files)
+        self.drop_area.clicked_signal.connect(self.open_file_dialog)
         layout.addWidget(self.drop_area)
 
         # Table Area for Editing
@@ -587,6 +581,19 @@ class MainWindow(QMainWindow):
         global current_lang
         current_lang = self.lang_combo.currentData()
         self.update_ui_texts()
+
+    def open_file_dialog(self):
+        try:
+            files, _ = QFileDialog.getOpenFileNames(
+                self, 
+                _("file_dialog_title"), 
+                "", 
+                _("file_dialog_filter")
+            )
+            if files:
+                self.process_files(files)
+        except Exception as e:
+            self.log(f"File dialog error: {e}")
 
     def log(self, message):
         self.log_output.append(message)
