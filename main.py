@@ -469,14 +469,11 @@ class DragDropArea(QLabel):
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             try:
-                # Get the parent window for proper modality
-                parent_window = self.window()
                 files, _ = QFileDialog.getOpenFileNames(
-                    parent_window, 
+                    self, 
                     _("file_dialog_title"), 
                     "", 
-                    _("file_dialog_filter"),
-                    options=QFileDialog.Option.DontUseNativeDialog
+                    _("file_dialog_filter")
                 )
                 if files:
                     self.files_dropped.emit(files)
