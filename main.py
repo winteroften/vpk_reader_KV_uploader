@@ -701,6 +701,11 @@ class MainWindow(QMainWindow):
         self.upload_btn.setEnabled(True)
         self.table.setEnabled(True)
         if success:
+            # 清除焦点，防止弹窗后输入框被默认全选
+            self.acc_id_input.clearFocus()
+            self.ns_id_input.clearFocus()
+            self.token_input.clearFocus()
+            
             QMessageBox.information(self, _("msg_success_title"), _("msg_upload_success"))
             self.table.setRowCount(0) # Clear after successful upload
             self.upload_btn.setEnabled(False)
