@@ -1,0 +1,6 @@
+PyQt6==6.10.2
+vpk==1.4.0
+vdf==3.4
+requests==2.32.5
+py7zr==1.1.0
+rarfile==4.2

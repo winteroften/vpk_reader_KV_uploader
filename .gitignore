@@ -1,0 +1,19 @@
+# Python & PyInstaller
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# IDEs
+.idea/
+.vscode/
+
+# Config files
+config.json
