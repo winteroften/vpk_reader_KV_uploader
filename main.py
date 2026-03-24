@@ -570,6 +570,9 @@ class MainWindow(QMainWindow):
 
         self.load_config()
         self.update_ui_texts()
+        
+        # 强制清除初始焦点
+        self.setFocus()
 
     def update_ui_texts(self):
         self.setWindowTitle(_("window_title"))
