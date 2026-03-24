@@ -584,7 +584,8 @@ class MainWindow(QMainWindow):
 
     def open_file_dialog(self):
         try:
-            files, _ = QFileDialog.getOpenFileNames(
+            # _ 是全局翻译函数的名称，我们不能在这里使用 _ 作为接收忽略变量的名称
+            files, selected_filter = QFileDialog.getOpenFileNames(
                 self, 
                 _("file_dialog_title"), 
                 "", 
