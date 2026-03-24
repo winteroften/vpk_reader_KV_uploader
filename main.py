@@ -240,8 +240,8 @@ class MainWindow(QMainWindow):
         self.lang_combo.addItem("繁體中文 (tchinese)", "tchinese")
         self.lang_combo.addItem("English (english)", "english")
         self.lang_combo.addItem("Русский (russian)", "russian")
-        self.lang_combo.addItem("Español (russian)", "spanish")
-        self.lang_combo.addItem("日本語 (russian)", "japanese")
+        self.lang_combo.addItem("Español (spanish)", "spanish")
+        self.lang_combo.addItem("日本語 (japanese)", "japanese")
         lang_layout.addWidget(self.lang_combo)
         config_layout.addLayout(lang_layout)
 
@@ -312,6 +312,11 @@ class MainWindow(QMainWindow):
                         self.lang_combo.setCurrentIndex(index)
             except Exception as e:
                 self.log(f"加载配置文件失败: {e}")
+        else:
+            # 默认设置为简体中文
+            index = self.lang_combo.findData("schinese")
+            if index >= 0:
+                self.lang_combo.setCurrentIndex(index)
 
     def save_config(self):
         config = {

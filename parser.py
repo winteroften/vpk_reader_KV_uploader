@@ -77,8 +77,10 @@ def parse_vpk(file_path, target_lang="schinese"):
     # Priority of languages: requested lang -> english -> any other
     priorities = [target_lang, "english"]
     
+    # 尝试读取对应语言文件
     for lang in reversed(priorities):
         for res_file in resource_files:
+            # 兼容带有 l4d360ui_ 前缀的情况
             if lang in res_file.lower():
                 try:
                     f = pak.get_file(res_file)
