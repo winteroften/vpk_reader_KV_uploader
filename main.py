@@ -543,18 +543,26 @@ class MainWindow(QMainWindow):
         # Upload Button
         self.upload_btn = QPushButton()
         self.upload_btn.setEnabled(False)
+        self.upload_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.upload_btn.setStyleSheet("""
             QPushButton {
-                background-color: #28a745; 
-                color: white; 
+                background-color: rgba(255, 255, 255, 0.1); 
+                color: #ffffff; 
                 font-weight: bold; 
                 padding: 10px; 
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 border-radius: 5px;
             }
+            QPushButton:hover:!disabled {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+            QPushButton:pressed:!disabled {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
             QPushButton:disabled {
-                background-color: #333333;
-                color: #888888;
-                border: 1px solid #555555;
+                background-color: rgba(255, 255, 255, 0.05);
+                color: rgba(255, 255, 255, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
         """)
         self.upload_btn.clicked.connect(self.start_upload)
