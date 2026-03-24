@@ -14,7 +14,7 @@
 ## 🚀 运行与构建
 
 ### 方式一：直接运行 (推荐)
-如果你只需要使用本工具，可以前往 [Releases](#) 页面下载最新打包好的 `L4D2_VPK_Reader_CN.exe` 文件。
+如果你只需要使用本工具，可以前往 [Releases](#) 页面下载最新打包好的 `L4D2_VPK_Reader.exe` 文件。
 双击即可直接运行，**无需安装任何环境**。
 
 ### 方式二：从源码运行与构建
@@ -22,8 +22,8 @@
 
 1. **克隆项目到本地**：
 ```bash
-git clone https://github.com/YourUsername/cf_vpk_reader.git
-cd cf_vpk_reader
+git clone https://github.com/winteroften/vpk_reader_KV_uploader.git
+cd vpk_reader_KV_uploader
 ```
 
 2. **安装依赖**：
@@ -41,7 +41,7 @@ python main.py
 4. **构建独立的可执行文件 (.exe)**：
 安装 `pyinstaller` 后执行：
 ```bash
-pyinstaller --noconsole --onefile --name L4D2_VPK_Reader_CN main.py
+pyinstaller --noconsole --onefile --name L4D2_VPK_Reader main.py
 ```
 构建完成后，程序将生成在 `dist` 目录下。
 
