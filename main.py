@@ -65,8 +65,8 @@ TRANSLATIONS = {
         "log_parse_done": "✅ 解析完成！请在上方表格中确认或修改名称，确认无误后点击【确认修改并上传】按钮。",
         "log_uploading": "正在上传",
         "log_records": "条记录",
-        "cancel_parse_btn": "取消解析",
-        "log_parse_cancelled": "用户已取消解析。",
+        "cancel_parse_btn": "清空/取消",
+        "log_parse_cancelled": "用户已取消或清空。",
         "update_found_title": "发现新版本",
         "update_found_msg": "检测到新版本: {version}\n\n更新内容:\n{body}\n\n请选择更新方式：",
         "update_direct": "GitHub 直连更新",
@@ -140,8 +140,8 @@ TRANSLATIONS = {
         "log_parse_done": "✅ Parsing complete! Review the table above, then click [Confirm & Upload].",
         "log_uploading": "Uploading",
         "log_records": "records",
-        "cancel_parse_btn": "Cancel Parsing",
-        "log_parse_cancelled": "Parsing cancelled by user.",
+        "cancel_parse_btn": "Clear/Cancel",
+        "log_parse_cancelled": "Cancelled or cleared by user.",
         "update_found_title": "New Version Available",
         "update_found_msg": "New version detected: {version}\n\nRelease notes:\n{body}\n\nPlease select an update method:",
         "update_direct": "GitHub Direct Update",
@@ -215,8 +215,8 @@ TRANSLATIONS = {
         "log_parse_done": "✅ Анализ завершен! Проверьте таблицу выше, затем нажмите [Подтвердить и Загрузить].",
         "log_uploading": "Загрузка",
         "log_records": "записей",
-        "cancel_parse_btn": "Отменить анализ",
-        "log_parse_cancelled": "Анализ отменен пользователем.",
+        "cancel_parse_btn": "Очистить/Отмена",
+        "log_parse_cancelled": "Отменено или очищено пользователем.",
         "update_found_title": "Доступна новая версия",
         "update_found_msg": "Обнаружена новая версия: {version}\n\nПримечания к выпуску:\n{body}\n\nПожалуйста, выберите метод обновления:",
         "update_direct": "Прямое обновление GitHub",
@@ -290,8 +290,8 @@ TRANSLATIONS = {
         "log_parse_done": "✅ ¡Análisis completo! Revise la tabla arriba, luego haga clic en [Confirmar y Subir].",
         "log_uploading": "Subiendo",
         "log_records": "registros",
-        "cancel_parse_btn": "Cancelar Análisis",
-        "log_parse_cancelled": "Análisis cancelado por el usuario.",
+        "cancel_parse_btn": "Limpiar/Cancelar",
+        "log_parse_cancelled": "Cancelado o limpiado por el usuario.",
         "update_found_title": "Nueva versión disponible",
         "update_found_msg": "Se detectó una nueva versión: {version}\n\nNotas de la versión:\n{body}\n\nSeleccione un método de actualización:",
         "update_direct": "Actualización directa de GitHub",
@@ -365,8 +365,8 @@ TRANSLATIONS = {
         "log_parse_done": "✅ 解析完了！上の表を確認し、[確認してアップロード] をクリックしてください。",
         "log_uploading": "アップロード中",
         "log_records": "件のレコード",
-        "cancel_parse_btn": "解析をキャンセル",
-        "log_parse_cancelled": "ユーザーによって解析がキャンセルされました。",
+        "cancel_parse_btn": "クリア/キャンセル",
+        "log_parse_cancelled": "ユーザーによってキャンセルまたはクリアされました。",
         "update_found_title": "新しいバージョンが利用可能です",
         "update_found_msg": "新しいバージョンが検出されました: {version}\n\nリリースノート:\n{body}\n\n更新方法を選択してください:",
         "update_direct": "GitHub 直接更新",
@@ -440,8 +440,8 @@ TRANSLATIONS = {
         "log_parse_done": "✅ 解析完成！請在上方表格中確認或修改名稱，確認無誤後點擊【確認修改並上傳】按鈕。",
         "log_uploading": "正在上傳",
         "log_records": "條記錄",
-        "cancel_parse_btn": "取消解析",
-        "log_parse_cancelled": "用戶已取消解析。",
+        "cancel_parse_btn": "清空/取消",
+        "log_parse_cancelled": "用戶已取消或清空。",
         "update_found_title": "發現新版本",
         "update_found_msg": "檢測到新版本: {version}\n\n更新內容:\n{body}\n\n請選擇更新方式：",
         "update_direct": "GitHub 直連更新",
@@ -1315,12 +1315,16 @@ class MainWindow(QMainWindow):
     def cancel_parse(self):
         if hasattr(self, 'worker') and self.worker.isRunning():
             self.worker.cancel()
-            self.cancel_btn.setEnabled(False)
+        else:
+            self.table.setRowCount(0)
+            self.log_output.clear()
+            self.upload_btn.setEnabled(False)
             self.log(_("log_parse_cancelled"))
 
     def on_parse_finished(self, results):
         self.drop_area.setEnabled(True)
-        self.cancel_btn.setEnabled(False)
+        # Enable cancel/clear button even when finished
+        self.cancel_btn.setEnabled(True)
         if not results:
             return
 
