@@ -85,6 +85,10 @@ TRANSLATIONS = {
         "kv_value": "值 (Value)",
         "kv_loading": "正在加载...",
         "kv_load_err": "加载失败: {error}",
+        "kv_confirm_save_title": "确认保存",
+        "kv_confirm_save_msg": "确定要保存对键 '{key}' 的修改吗？",
+        "kv_confirm_delete_title": "确认删除",
+        "kv_confirm_delete_msg": "确定要永久删除键 '{key}' 吗？此操作无法撤销！",
         "help_btn": "帮助说明",
         "check_update_btn": "检查更新",
         "help_title": "使用说明",
@@ -154,6 +158,10 @@ TRANSLATIONS = {
         "kv_value": "Value",
         "kv_loading": "Loading...",
         "kv_load_err": "Load failed: {error}",
+        "kv_confirm_save_title": "Confirm Save",
+        "kv_confirm_save_msg": "Are you sure you want to save changes to key '{key}'?",
+        "kv_confirm_delete_title": "Confirm Delete",
+        "kv_confirm_delete_msg": "Are you sure you want to permanently delete key '{key}'? This cannot be undone!",
         "help_btn": "Help",
         "check_update_btn": "Check Update",
         "help_title": "How to Use",
@@ -223,6 +231,10 @@ TRANSLATIONS = {
         "kv_value": "Значение",
         "kv_loading": "Загрузка...",
         "kv_load_err": "Ошибка загрузки: {error}",
+        "kv_confirm_save_title": "Подтвердить сохранение",
+        "kv_confirm_save_msg": "Вы уверены, что хотите сохранить изменения для ключа '{key}'?",
+        "kv_confirm_delete_title": "Подтвердить удаление",
+        "kv_confirm_delete_msg": "Вы уверены, что хотите навсегда удалить ключ '{key}'? Это действие нельзя отменить!",
         "help_btn": "Справка",
         "check_update_btn": "Проверить обновления",
         "help_title": "Как использовать",
@@ -292,6 +304,10 @@ TRANSLATIONS = {
         "kv_value": "Valor",
         "kv_loading": "Cargando...",
         "kv_load_err": "Error de carga: {error}",
+        "kv_confirm_save_title": "Confirmar Guardado",
+        "kv_confirm_save_msg": "¿Está seguro de que desea guardar los cambios en la clave '{key}'?",
+        "kv_confirm_delete_title": "Confirmar Eliminación",
+        "kv_confirm_delete_msg": "¿Está seguro de que desea eliminar permanentemente la clave '{key}'? ¡Esto no se puede deshacer!",
         "help_btn": "Ayuda",
         "check_update_btn": "Buscar actualizaciones",
         "help_title": "Cómo usar",
@@ -361,6 +377,10 @@ TRANSLATIONS = {
         "kv_value": "値",
         "kv_loading": "読み込み中...",
         "kv_load_err": "読み込み失敗: {error}",
+        "kv_confirm_save_title": "保存の確認",
+        "kv_confirm_save_msg": "キー '{key}' への変更を保存してもよろしいですか？",
+        "kv_confirm_delete_title": "削除の確認",
+        "kv_confirm_delete_msg": "キー '{key}' を完全に削除してもよろしいですか？この操作は元に戻せません！",
         "help_btn": "ヘルプ",
         "check_update_btn": "更新を確認",
         "help_title": "使い方",
@@ -430,6 +450,10 @@ TRANSLATIONS = {
         "kv_value": "值 (Value)",
         "kv_loading": "正在加載...",
         "kv_load_err": "加載失敗: {error}",
+        "kv_confirm_save_title": "確認保存",
+        "kv_confirm_save_msg": "確定要保存對鍵 '{key}' 的修改嗎？",
+        "kv_confirm_delete_title": "確認刪除",
+        "kv_confirm_delete_msg": "確定要永久刪除鍵 '{key}' 嗎？此操作無法撤銷！",
         "help_btn": "幫助說明",
         "check_update_btn": "檢查更新",
         "help_title": "使用說明",
@@ -740,6 +764,17 @@ class KVManagerDialog(QDialog):
         key = item.text()
         value = self.value_edit.toPlainText()
         
+        reply = QMessageBox.question(
+            self, 
+            _("kv_confirm_save_title"), 
+            _("kv_confirm_save_msg").format(key=key),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        
+        if reply != QMessageBox.StandardButton.Yes:
+            return
+        
         self.save_btn.setEnabled(False)
         self.save_thread = UploadThread({key: value}, self.cf.account_id, self.cf.namespace_id, self.cf.api_token)
         self.save_thread.finished_signal.connect(self.on_save_finished)
@@ -756,6 +791,17 @@ class KVManagerDialog(QDialog):
         item = self.list_widget.currentItem()
         if not item: return
         key = item.text()
+        
+        reply = QMessageBox.warning(
+            self, 
+            _("kv_confirm_delete_title"), 
+            _("kv_confirm_delete_msg").format(key=key),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        
+        if reply != QMessageBox.StandardButton.Yes:
+            return
         
         self.delete_btn.setEnabled(False)
         self.del_thread = DeleteKVThread(self.cf, key)
