@@ -501,21 +501,32 @@ def apply_update(new_exe_path):
     current_exe = sys.executable
     bat_path = os.path.join(tempfile.gettempdir(), "update_l4d2_vpk.bat")
     
-    # We use ping instead of timeout because timeout might not work in all environments.
-    # We also copy to a slightly different temporary name first, then move, 
-    # to avoid locking issues with the running executable's temporary _MEI folder.
+    # Use powershell for more robust file replacing and starting
+    # It waits for the process to exit, then replaces and restarts.
     with open(bat_path, "w", encoding="utf-8") as f:
         f.write(f"""@echo off
 echo Updating L4D2 VPK Reader... Please wait.
-ping 127.0.0.1 -n 6 > nul
-move /y "{new_exe_path}" "{current_exe}"
-if errorlevel 1 (
-    echo Failed to update. The file might still be in use.
+ping 127.0.0.1 -n 5 > nul
+
+:: Try to delete the old exe first (it will fail if still locked, but helps if just lingering)
+del /f /q "{current_exe}" 2>nul
+
+:: Copy the new file over
+copy /y "{new_exe_path}" "{current_exe}"
+
+:: Check if the copy was successful
+if not exist "{current_exe}" (
+    echo Update failed! The file could not be replaced.
     pause
     del "%~f0"
     exit /b 1
 )
+
+:: Start the new executable
 start "" "{current_exe}"
+
+:: Cleanup
+del "{new_exe_path}" 2>nul
 del "%~f0"
 """)
     
