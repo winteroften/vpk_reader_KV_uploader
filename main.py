@@ -84,7 +84,13 @@ TRANSLATIONS = {
         "kv_key": "键 (Key)",
         "kv_value": "值 (Value)",
         "kv_loading": "正在加载...",
-        "kv_load_err": "加载失败: {error}"
+        "kv_load_err": "加载失败: {error}",
+        "help_btn": "帮助说明",
+        "check_update_btn": "检查更新",
+        "help_title": "使用说明",
+        "help_content": "1. 填写 Cloudflare 账户、KV 命名空间及 API Token 并保存。\n2. 将 VPK 或 压缩包 拖入虚线框，程序会自动解析。\n3. 在表格中可双击修改显示的章节名称。\n4. 点击底部按钮将修改后的内容上传到云端 KV。\n\n*支持批量拖入多文件，系统会自动进行多线程加速解析。*",
+        "update_checking": "正在检查更新...",
+        "update_latest": "当前已经是最新版本！"
     },
     "english": {
         "window_title": "L4D2 VPK Map Reader & CF KV Uploader",
@@ -147,7 +153,13 @@ TRANSLATIONS = {
         "kv_key": "Key",
         "kv_value": "Value",
         "kv_loading": "Loading...",
-        "kv_load_err": "Load failed: {error}"
+        "kv_load_err": "Load failed: {error}",
+        "help_btn": "Help",
+        "check_update_btn": "Check Update",
+        "help_title": "How to Use",
+        "help_content": "1. Fill in Cloudflare Account, KV Namespace & API Token, then Save.\n2. Drag & drop VPK or archives into the dashed box to parse automatically.\n3. Double-click to edit chapter names in the table.\n4. Click the bottom button to upload the changes to your KV.\n\n*Supports dragging multiple files at once with multi-threading acceleration.*",
+        "update_checking": "Checking for updates...",
+        "update_latest": "You are already using the latest version!"
     },
     "russian": {
         "window_title": "L4D2 VPK Map Reader & CF KV Uploader",
@@ -210,7 +222,13 @@ TRANSLATIONS = {
         "kv_key": "Ключ",
         "kv_value": "Значение",
         "kv_loading": "Загрузка...",
-        "kv_load_err": "Ошибка загрузки: {error}"
+        "kv_load_err": "Ошибка загрузки: {error}",
+        "help_btn": "Справка",
+        "check_update_btn": "Проверить обновления",
+        "help_title": "Как использовать",
+        "help_content": "1. Заполните Cloudflare Account, KV Namespace и API Token, затем сохраните.\n2. Перетащите VPK или архивы в пунктирное поле для автоматического анализа.\n3. Дважды щелкните, чтобы изменить названия глав в таблице.\n4. Нажмите нижнюю кнопку, чтобы загрузить изменения в ваш KV.\n\n*Поддерживается перетаскивание нескольких файлов одновременно с многопоточным ускорением.*",
+        "update_checking": "Проверка обновлений...",
+        "update_latest": "У вас уже установлена последняя версия!"
     },
     "spanish": {
         "window_title": "L4D2 VPK Map Reader & CF KV Uploader",
@@ -273,7 +291,13 @@ TRANSLATIONS = {
         "kv_key": "Clave",
         "kv_value": "Valor",
         "kv_loading": "Cargando...",
-        "kv_load_err": "Error de carga: {error}"
+        "kv_load_err": "Error de carga: {error}",
+        "help_btn": "Ayuda",
+        "check_update_btn": "Buscar actualizaciones",
+        "help_title": "Cómo usar",
+        "help_content": "1. Complete la Cuenta de Cloudflare, KV Namespace y API Token, luego Guarde.\n2. Arrastre y suelte archivos VPK o archivos en el cuadro punteado para analizar automáticamente.\n3. Haga doble clic para editar los nombres de los capítulos en la tabla.\n4. Haga clic en el botón inferior para cargar los cambios en su KV.\n\n*Soporta arrastrar múltiples archivos a la vez con aceleración multihilo.*",
+        "update_checking": "Buscando actualizaciones...",
+        "update_latest": "¡Ya estás usando la última versión!"
     },
     "japanese": {
         "window_title": "L4D2 VPK Map Reader & CF KV Uploader",
@@ -336,7 +360,13 @@ TRANSLATIONS = {
         "kv_key": "キー",
         "kv_value": "値",
         "kv_loading": "読み込み中...",
-        "kv_load_err": "読み込み失敗: {error}"
+        "kv_load_err": "読み込み失敗: {error}",
+        "help_btn": "ヘルプ",
+        "check_update_btn": "更新を確認",
+        "help_title": "使い方",
+        "help_content": "1. Cloudflare Account、KV Namespace、API Token を入力して保存します。\n2. VPK またはアーカイブを点線のボックスにドラッグ＆ドロップして自動解析します。\n3. 表内のチャプター名をダブルクリックして編集できます。\n4. 下部のボタンをクリックして変更を KV にアップロードします。\n\n*マルチスレッドによる複数ファイルの同時ドラッグに対応しています。*",
+        "update_checking": "更新を確認しています...",
+        "update_latest": "すでに最新バージョンを使用しています！"
     },
     "tchinese": {
         "window_title": "惡靈勢力2 VPK地圖解析與 Cloudflare KV 上傳工具",
@@ -399,7 +429,13 @@ TRANSLATIONS = {
         "kv_key": "鍵 (Key)",
         "kv_value": "值 (Value)",
         "kv_loading": "正在加載...",
-        "kv_load_err": "加載失敗: {error}"
+        "kv_load_err": "加載失敗: {error}",
+        "help_btn": "幫助說明",
+        "check_update_btn": "檢查更新",
+        "help_title": "使用說明",
+        "help_content": "1. 填寫 Cloudflare 帳戶、KV 命名空間及 API Token 並保存。\n2. 將 VPK 或 壓縮包 拖入虛線框，程式會自動解析。\n3. 在表格中可雙擊修改顯示的章節名稱。\n4. 點擊底部按鈕將修改後的內容上傳到雲端 KV。\n\n*支援批量拖入多檔案，系統會自動進行多執行緒加速解析。*",
+        "update_checking": "正在檢查更新...",
+        "update_latest": "當前已經是最新版本！"
     }
 }
 
@@ -951,8 +987,17 @@ class MainWindow(QMainWindow):
         self.save_btn.clicked.connect(self.save_config)
         self.kv_manage_btn = QPushButton()
         self.kv_manage_btn.clicked.connect(self.open_kv_manager)
+        
+        self.help_btn = QPushButton()
+        self.help_btn.clicked.connect(self.show_help)
+        
+        self.check_update_btn = QPushButton()
+        self.check_update_btn.clicked.connect(self.manual_check_update)
+        
         btn_layout.addWidget(self.save_btn)
         btn_layout.addWidget(self.kv_manage_btn)
+        btn_layout.addWidget(self.help_btn)
+        btn_layout.addWidget(self.check_update_btn)
         config_layout.addLayout(btn_layout)
 
         layout.addLayout(config_layout)
@@ -1019,6 +1064,25 @@ class MainWindow(QMainWindow):
             dlg = UpdateDialog(self, release_data)
             dlg.exec()
 
+    def manual_check_update(self):
+        self.check_update_btn.setEnabled(False)
+        self.check_update_btn.setText(_("update_checking"))
+        self.manual_update_thread = CheckUpdateThread()
+        self.manual_update_thread.result_signal.connect(self.on_manual_update_checked)
+        self.manual_update_thread.start()
+        
+    def on_manual_update_checked(self, has_update, release_data):
+        self.check_update_btn.setEnabled(True)
+        self.check_update_btn.setText(_("check_update_btn"))
+        if has_update:
+            dlg = UpdateDialog(self, release_data)
+            dlg.exec()
+        else:
+            QMessageBox.information(self, _("check_update_btn"), _("update_latest"))
+
+    def show_help(self):
+        QMessageBox.information(self, _("help_title"), _("help_content"))
+
     def open_kv_manager(self):
         acc_id = self.acc_id_input.text().strip()
         ns_id = self.ns_id_input.text().strip()
@@ -1041,6 +1105,8 @@ class MainWindow(QMainWindow):
         self.lang_label.setText(_("lang_label"))
         self.save_btn.setText(_("save_btn"))
         self.kv_manage_btn.setText(_("kv_manage_btn"))
+        self.help_btn.setText(_("help_btn"))
+        self.check_update_btn.setText(_("check_update_btn"))
         self.drop_area.update_text()
         self.table.setHorizontalHeaderLabels([_("table_col_code"), _("table_col_name")])
         self.upload_btn.setText(_("upload_btn"))
