@@ -17,7 +17,7 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from parser import parse_vpk
 from cf_kv import CloudflareKV
 
-VERSION = "v1.0.21"
+VERSION = "v1.0.25"
 CONFIG_FILE = "config.json"
 REPO_API = "https://api.github.com/repos/winteroften/vpk_reader_KV_uploader/releases/latest"
 
@@ -545,24 +545,29 @@ def apply_update(new_exe_path):
     $src = '{new_exe_path}'
     $dst = '{current_exe}'
     
-    # Wait for the main process to exit
-    Start-Sleep -Seconds 2
+    # Wait for the main process to exit completely
+    Start-Sleep -Seconds 3
     
     $retryCount = 0
     while (Test-Path $dst) {{
         try {{
-            Remove-Item -Path $dst -Force -ErrorAction Stop
+            # Try to rename the old executable to a temporary name
+            # This works even if the _MEI folder is locked, avoiding DLL load errors
+            $tempOld = $dst + ".old"
+            if (Test-Path $tempOld) {{ Remove-Item -Path $tempOld -Force -ErrorAction SilentlyContinue }}
+            Rename-Item -Path $dst -NewName (Split-Path $tempOld -Leaf) -Force -ErrorAction Stop
             break
         }} catch {{
             $retryCount++
-            if ($retryCount -gt 10) {{
-                [System.Windows.Forms.MessageBox]::Show("无法覆盖旧文件，请手动删除旧版并重命名新下载的文件。`n`n新文件位置: $src", "更新失败", 0, 16)
+            if ($retryCount -gt 15) {{
+                [System.Windows.Forms.MessageBox]::Show("无法重命名旧文件，请手动删除旧版并重命名新下载的文件。`n`n新文件位置: $src", "更新失败", 0, 16)
                 exit
             }}
             Start-Sleep -Seconds 1
         }}
     }}
     
+    # Now we can safely move the new file to the destination
     Move-Item -Path $src -Destination $dst -Force
     Start-Process -FilePath $dst
     """
@@ -1139,13 +1144,22 @@ class MainWindow(QMainWindow):
         self.upload_btn.clicked.connect(self.start_upload)
         self.cancel_btn = QPushButton()
         self.cancel_btn.setEnabled(False)
+        self.cancel_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.cancel_btn.setStyleSheet("""
             QPushButton {
-                background-color: #dc3545; 
-                color: white; 
+                background-color: rgba(255, 255, 255, 0.1); 
+                color: #ffffff; 
                 font-weight: bold; 
                 padding: 10px; 
+                border: 1px solid rgba(255, 255, 255, 0.2);
                 border-radius: 5px;
+            }
+            QPushButton:hover:!disabled {
+                background-color: rgba(220, 53, 69, 0.5); /* 鼠标悬停时透出淡红色以示警告 */
+                border: 1px solid rgba(220, 53, 69, 0.8);
+            }
+            QPushButton:pressed:!disabled {
+                background-color: rgba(220, 53, 69, 0.8);
             }
             QPushButton:disabled {
                 background-color: rgba(255, 255, 255, 0.05);
