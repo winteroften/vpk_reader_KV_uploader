@@ -17,7 +17,7 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from parser import parse_vpk
 from cf_kv import CloudflareKV
 
-VERSION = "v1.0.17"
+VERSION = "v1.0.21"
 CONFIG_FILE = "config.json"
 REPO_API = "https://api.github.com/repos/winteroften/vpk_reader_KV_uploader/releases/latest"
 
@@ -523,37 +523,51 @@ def apply_update(new_exe_path):
         return
         
     current_exe = sys.executable
-    bat_path = os.path.join(tempfile.gettempdir(), "update_l4d2_vpk.bat")
+    current_dir = os.path.dirname(current_exe)
+    exe_name = os.path.basename(current_exe)
     
-    # Use powershell for more robust file replacing and starting
-    # It waits for the process to exit, then replaces and restarts.
+    # We create a more robust powershell-based updater script
+    # It will run entirely hidden and wait until the original process is gone
+    ps_script = f"""
+    $ErrorActionPreference = 'Stop'
+    $src = '{new_exe_path}'
+    $dst = '{current_exe}'
+    
+    # Wait for the main process to exit
+    Start-Sleep -Seconds 2
+    
+    $retryCount = 0
+    while (Test-Path $dst) {{
+        try {{
+            Remove-Item -Path $dst -Force -ErrorAction Stop
+            break
+        }} catch {{
+            $retryCount++
+            if ($retryCount -gt 10) {{
+                [System.Windows.Forms.MessageBox]::Show("无法覆盖旧文件，请手动删除旧版并重命名新下载的文件。`n`n新文件位置: $src", "更新失败", 0, 16)
+                exit
+            }}
+            Start-Sleep -Seconds 1
+        }}
+    }}
+    
+    Move-Item -Path $src -Destination $dst -Force
+    Start-Process -FilePath $dst
+    """
+    
+    bat_path = os.path.join(tempfile.gettempdir(), "update_l4d2_vpk.bat")
+    ps_path = os.path.join(tempfile.gettempdir(), "update_l4d2_vpk.ps1")
+    
+    with open(ps_path, "w", encoding="utf-8-sig") as f:
+        f.write(ps_script)
+        
     with open(bat_path, "w", encoding="utf-8") as f:
         f.write(f"""@echo off
-echo Updating L4D2 VPK Reader... Please wait.
-ping 127.0.0.1 -n 5 > nul
-
-:: Try to delete the old exe first (it will fail if still locked, but helps if just lingering)
-del /f /q "{current_exe}" 2>nul
-
-:: Copy the new file over
-copy /y "{new_exe_path}" "{current_exe}"
-
-:: Check if the copy was successful
-if not exist "{current_exe}" (
-    echo Update failed! The file could not be replaced.
-    pause
-    del "%~f0"
-    exit /b 1
-)
-
-:: Start the new executable
-start "" "{current_exe}"
-
-:: Cleanup
-del "{new_exe_path}" 2>nul
+powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "{ps_path}"
+del "{ps_path}"
 del "%~f0"
 """)
-    
+
     # Detach the process completely
     DETACHED_PROCESS = 0x00000008
     subprocess.Popen(["cmd.exe", "/c", bat_path], creationflags=DETACHED_PROCESS, close_fds=True)
@@ -642,8 +656,11 @@ class UpdateDialog(QDialog):
         self.downloader.start()
         
     def on_downloaded(self, filepath):
-        self.accept()
+        # Change button states to indicate it's preparing to restart
+        self.btn_direct.setText("准备重启更新...")
+        QApplication.processEvents()
         apply_update(filepath)
+        self.accept()
         
     def on_error(self, err):
         QMessageBox.warning(self, "Error", _("update_download_fail").format(error=err))
