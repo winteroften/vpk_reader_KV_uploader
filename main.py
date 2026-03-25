@@ -17,7 +17,7 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from parser import parse_vpk
 from cf_kv import CloudflareKV
 
-VERSION = "v1.0.14"
+VERSION = "v1.0.17"
 CONFIG_FILE = "config.json"
 REPO_API = "https://api.github.com/repos/winteroften/vpk_reader_KV_uploader/releases/latest"
 
@@ -501,17 +501,16 @@ def apply_update(new_exe_path):
     current_exe = sys.executable
     bat_path = os.path.join(tempfile.gettempdir(), "update_l4d2_vpk.bat")
     
-    # We need to copy the new exe to the same directory as the current one
-    # If the user is running from a protected directory, this might need admin rights
-    # We wait a bit longer (5 seconds) to ensure the original process has completely exited
-    # and all file locks (like the one PyInstaller puts on the exe) are released
+    # We use ping instead of timeout because timeout might not work in all environments.
+    # We also copy to a slightly different temporary name first, then move, 
+    # to avoid locking issues with the running executable's temporary _MEI folder.
     with open(bat_path, "w", encoding="utf-8") as f:
         f.write(f"""@echo off
 echo Updating L4D2 VPK Reader... Please wait.
-timeout /t 5 /nobreak > NUL
-copy /y "{new_exe_path}" "{current_exe}"
+ping 127.0.0.1 -n 6 > nul
+move /y "{new_exe_path}" "{current_exe}"
 if errorlevel 1 (
-    echo Failed to copy the update. Please check if the file is in use.
+    echo Failed to update. The file might still be in use.
     pause
     del "%~f0"
     exit /b 1
@@ -519,8 +518,14 @@ if errorlevel 1 (
 start "" "{current_exe}"
 del "%~f0"
 """)
-    subprocess.Popen(bat_path, creationflags=subprocess.CREATE_NEW_CONSOLE)
+    
+    # Detach the process completely
+    DETACHED_PROCESS = 0x00000008
+    subprocess.Popen(["cmd.exe", "/c", bat_path], creationflags=DETACHED_PROCESS, close_fds=True)
+    
+    # Terminate the application immediately
     QApplication.quit()
+    sys.exit(0)
 
 class UpdateDialog(QDialog):
     def __init__(self, parent, release_data):
