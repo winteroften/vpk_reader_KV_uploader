@@ -1228,6 +1228,23 @@ class MainWindow(QMainWindow):
         global current_lang
         current_lang = self.lang_combo.currentData()
         self.update_ui_texts()
+        
+        # 实时保存语言选择，实现语言偏好持久化
+        if os.path.exists(CONFIG_FILE):
+            try:
+                with open(CONFIG_FILE, 'r') as f:
+                    config = json.load(f)
+            except Exception:
+                config = {}
+        else:
+            config = {}
+            
+        config["language"] = current_lang
+        try:
+            with open(CONFIG_FILE, 'w') as f:
+                json.dump(config, f)
+        except Exception as e:
+            pass
 
     def open_file_dialog(self):
         try:
