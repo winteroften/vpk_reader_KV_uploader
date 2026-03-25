@@ -11,7 +11,7 @@ import requests
 import subprocess
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                              QLabel, QLineEdit, QPushButton, QTextEdit, QFileDialog, QMessageBox,
-                             QTableWidget, QTableWidgetItem, QHeaderView, QComboBox, QDialog, QSplitter, QListWidget, QProgressBar)
+                             QTableWidget, QTableWidgetItem, QHeaderView, QComboBox, QDialog, QSplitter, QListWidget, QProgressBar, QInputDialog)
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 
 from parser import parse_vpk
@@ -70,9 +70,12 @@ TRANSLATIONS = {
         "update_direct": "GitHub 直连更新",
         "update_proxy1": "国内代理更新 (ghproxy)",
         "update_proxy2": "国内代理更新 (99988866)",
+        "update_custom": "自定义代理链接",
         "update_cancel": "暂不更新",
         "update_downloading": "正在下载更新...",
         "update_download_fail": "下载失败: {error}",
+        "custom_proxy_prompt_title": "自定义代理",
+        "custom_proxy_prompt_msg": "请输入自定义代理前缀\n(例如: https://mirror.ghproxy.com/):",
         "kv_manager_title": "Cloudflare KV 管理",
         "kv_manage_btn": "管理 KV 列表",
         "kv_refresh": "刷新列表",
@@ -130,9 +133,12 @@ TRANSLATIONS = {
         "update_direct": "GitHub Direct Update",
         "update_proxy1": "Proxy Update (ghproxy)",
         "update_proxy2": "Proxy Update (99988866)",
+        "update_custom": "Custom Proxy URL",
         "update_cancel": "Cancel",
         "update_downloading": "Downloading update...",
         "update_download_fail": "Download failed: {error}",
+        "custom_proxy_prompt_title": "Custom Proxy",
+        "custom_proxy_prompt_msg": "Please enter custom proxy prefix\n(e.g., https://mirror.ghproxy.com/):",
         "kv_manager_title": "Cloudflare KV Manager",
         "kv_manage_btn": "Manage KV",
         "kv_refresh": "Refresh List",
@@ -142,13 +148,266 @@ TRANSLATIONS = {
         "kv_value": "Value",
         "kv_loading": "Loading...",
         "kv_load_err": "Load failed: {error}"
+    },
+    "russian": {
+        "window_title": "L4D2 VPK Map Reader & CF KV Uploader",
+        "acc_id_label": "Account ID:",
+        "acc_id_placeholder": "Введите Cloudflare Account ID",
+        "ns_id_label": "Namespace ID:",
+        "ns_id_placeholder": "Введите Cloudflare KV Namespace ID",
+        "token_label": "API Token:",
+        "token_placeholder": "Введите Cloudflare API Token",
+        "lang_label": "Язык интерфейса:",
+        "save_btn": "Сохранить",
+        "drag_drop_text": "Перетащите VPK/ZIP/RAR/7z файлы сюда\nили Нажмите для выбора",
+        "file_dialog_title": "Выберите файлы VPK/Архива",
+        "file_dialog_filter": "Поддерживаемые файлы (*.vpk *.zip *.rar *.7z);;Все файлы (*.*)",
+        "table_col_code": "Код карты (Только чтение)",
+        "table_col_name": "Отображаемое имя (Редактируемое)",
+        "upload_btn": "Подтвердить и Загрузить",
+        "msg_missing_config": "Пожалуйста, введите Cloudflare Account ID, Namespace ID и API Token.",
+        "msg_missing_title": "Отсутствует конфигурация",
+        "msg_upload_success": "Все данные успешно загружены в Cloudflare KV!",
+        "msg_success_title": "Успешная загрузка",
+        "log_load_err": "Не удалось загрузить конфигурацию",
+        "log_save_ok": "Конфигурация сохранена.",
+        "log_save_err": "Не удалось сохранить конфигурацию",
+        "log_extracting": "Извлечение",
+        "log_unsupported_archive": "Неподдерживаемый формат архива",
+        "log_extract_fail": "Ошибка извлечения",
+        "log_skip_file": "Пропуск неподдерживаемого файла",
+        "log_parsing": "Анализ",
+        "log_no_mission": "Данные миссии не найдены в",
+        "log_extract_ok": "Извлечено",
+        "log_parse_err": "Ошибка анализа",
+        "log_no_vpk": "Не найдено VPK файлов для обработки.",
+        "log_no_file": "Файлы не выбраны.",
+        "log_timeout": "Предупреждение: Превышено время ожидания (>2 мин)! Остальные отменены.",
+        "log_process_err": "Исключение при обработке файла",
+        "log_no_data": "Данные не извлечены. Завершено.",
+        "log_upload_ok": "Успешно загружено",
+        "log_upload_fail": "Ошибка загрузки. Ответ API",
+        "log_upload_err": "Исключение во время загрузки",
+        "log_parse_done": "✅ Анализ завершен! Проверьте таблицу выше, затем нажмите [Подтвердить и Загрузить].",
+        "log_uploading": "Загрузка",
+        "log_records": "записей",
+        "update_found_title": "Доступна новая версия",
+        "update_found_msg": "Обнаружена новая версия: {version}\n\nПримечания к выпуску:\n{body}\n\nПожалуйста, выберите метод обновления:",
+        "update_direct": "Прямое обновление GitHub",
+        "update_proxy1": "Обновление через прокси (ghproxy)",
+        "update_proxy2": "Обновление через прокси (99988866)",
+        "update_custom": "Пользовательский URL прокси",
+        "update_cancel": "Отмена",
+        "update_downloading": "Загрузка обновления...",
+        "update_download_fail": "Ошибка загрузки: {error}",
+        "custom_proxy_prompt_title": "Пользовательский прокси",
+        "custom_proxy_prompt_msg": "Пожалуйста, введите префикс прокси\n(например, https://mirror.ghproxy.com/):",
+        "kv_manager_title": "Менеджер Cloudflare KV",
+        "kv_manage_btn": "Управление KV",
+        "kv_refresh": "Обновить список",
+        "kv_delete": "Удалить выбранное",
+        "kv_save": "Сохранить изменения",
+        "kv_key": "Ключ",
+        "kv_value": "Значение",
+        "kv_loading": "Загрузка...",
+        "kv_load_err": "Ошибка загрузки: {error}"
+    },
+    "spanish": {
+        "window_title": "L4D2 VPK Map Reader & CF KV Uploader",
+        "acc_id_label": "Account ID:",
+        "acc_id_placeholder": "Ingrese Cloudflare Account ID aquí",
+        "ns_id_label": "Namespace ID:",
+        "ns_id_placeholder": "Ingrese Cloudflare KV Namespace ID aquí",
+        "token_label": "API Token:",
+        "token_placeholder": "Ingrese Cloudflare API Token aquí",
+        "lang_label": "Idioma de UI:",
+        "save_btn": "Guardar Config",
+        "drag_drop_text": "Arrastre y suelte archivos VPK/ZIP/RAR/7z aquí\no Haga clic para seleccionar",
+        "file_dialog_title": "Seleccionar Archivos VPK/Archivo",
+        "file_dialog_filter": "Archivos soportados (*.vpk *.zip *.rar *.7z);;Todos los archivos (*.*)",
+        "table_col_code": "Código de Mapa (Solo lectura)",
+        "table_col_name": "Nombre a Mostrar (Editable)",
+        "upload_btn": "Confirmar y Subir",
+        "msg_missing_config": "Por favor ingrese Cloudflare Account ID, Namespace ID y API Token.",
+        "msg_missing_title": "Configuración Faltante",
+        "msg_upload_success": "¡Todos los datos subidos con éxito a Cloudflare KV!",
+        "msg_success_title": "Subida Exitosa",
+        "log_load_err": "Error al cargar la configuración",
+        "log_save_ok": "Configuración guardada.",
+        "log_save_err": "Error al guardar la configuración",
+        "log_extracting": "Extrayendo",
+        "log_unsupported_archive": "Formato de archivo no soportado",
+        "log_extract_fail": "Fallo en la extracción",
+        "log_skip_file": "Omitiendo archivo no soportado",
+        "log_parsing": "Analizando",
+        "log_no_mission": "No se encontraron datos de misión en",
+        "log_extract_ok": "Extraído",
+        "log_parse_err": "Error al analizar",
+        "log_no_vpk": "No se encontraron archivos VPK procesables.",
+        "log_no_file": "No se seleccionaron archivos.",
+        "log_timeout": "Advertencia: ¡Algunas tareas agotaron el tiempo (>2 mins)! Restantes canceladas.",
+        "log_process_err": "Excepción al procesar archivo",
+        "log_no_data": "No se extrajeron datos. Finalizado.",
+        "log_upload_ok": "Subido exitosamente",
+        "log_upload_fail": "Subida fallida. Respuesta de la API",
+        "log_upload_err": "Excepción durante la subida",
+        "log_parse_done": "✅ ¡Análisis completo! Revise la tabla arriba, luego haga clic en [Confirmar y Subir].",
+        "log_uploading": "Subiendo",
+        "log_records": "registros",
+        "update_found_title": "Nueva versión disponible",
+        "update_found_msg": "Se detectó una nueva versión: {version}\n\nNotas de la versión:\n{body}\n\nSeleccione un método de actualización:",
+        "update_direct": "Actualización directa de GitHub",
+        "update_proxy1": "Actualización por proxy (ghproxy)",
+        "update_proxy2": "Actualización por proxy (99988866)",
+        "update_custom": "URL de proxy personalizada",
+        "update_cancel": "Cancelar",
+        "update_downloading": "Descargando actualización...",
+        "update_download_fail": "Error en la descarga: {error}",
+        "custom_proxy_prompt_title": "Proxy personalizado",
+        "custom_proxy_prompt_msg": "Ingrese el prefijo del proxy\n(ej. https://mirror.ghproxy.com/):",
+        "kv_manager_title": "Gestor de Cloudflare KV",
+        "kv_manage_btn": "Gestionar KV",
+        "kv_refresh": "Actualizar Lista",
+        "kv_delete": "Eliminar Seleccionado",
+        "kv_save": "Guardar Cambios",
+        "kv_key": "Clave",
+        "kv_value": "Valor",
+        "kv_loading": "Cargando...",
+        "kv_load_err": "Error de carga: {error}"
+    },
+    "japanese": {
+        "window_title": "L4D2 VPK Map Reader & CF KV Uploader",
+        "acc_id_label": "Account ID:",
+        "acc_id_placeholder": "ここに Cloudflare Account ID を入力",
+        "ns_id_label": "Namespace ID:",
+        "ns_id_placeholder": "ここに Cloudflare KV Namespace ID を入力",
+        "token_label": "API Token:",
+        "token_placeholder": "ここに Cloudflare API Token を入力",
+        "lang_label": "UI 言語:",
+        "save_btn": "設定を保存",
+        "drag_drop_text": "VPK/ZIP/RAR/7z ファイルをここにドラッグ＆ドロップ\nまたはクリックして選択",
+        "file_dialog_title": "VPK/アーカイブファイルを選択",
+        "file_dialog_filter": "サポートされるファイル (*.vpk *.zip *.rar *.7z);;すべてのファイル (*.*)",
+        "table_col_code": "マップコード (読み取り専用)",
+        "table_col_name": "表示名 (編集可能)",
+        "upload_btn": "確認してアップロード",
+        "msg_missing_config": "Cloudflare Account ID、Namespace ID、および API Token を入力してください。",
+        "msg_missing_title": "設定が不足しています",
+        "msg_upload_success": "すべてのデータが Cloudflare KV に正常にアップロードされました！",
+        "msg_success_title": "アップロード成功",
+        "log_load_err": "設定の読み込みに失敗しました",
+        "log_save_ok": "設定が保存されました。",
+        "log_save_err": "設定の保存に失敗しました",
+        "log_extracting": "展開中",
+        "log_unsupported_archive": "サポートされていないアーカイブ形式",
+        "log_extract_fail": "展開に失敗しました",
+        "log_skip_file": "サポートされていないファイルをスキップ",
+        "log_parsing": "解析中",
+        "log_no_mission": "ミッションデータが見つかりません",
+        "log_extract_ok": "抽出成功",
+        "log_parse_err": "解析エラー",
+        "log_no_vpk": "処理可能な VPK ファイルが見つかりません。",
+        "log_no_file": "ファイルが選択されていません。",
+        "log_timeout": "警告: 一部のタスクがタイムアウト (>2分) しました！残りはキャンセルされました。",
+        "log_process_err": "ファイル処理中の例外",
+        "log_no_data": "データは抽出されませんでした。終了します。",
+        "log_upload_ok": "アップロード成功",
+        "log_upload_fail": "アップロード失敗。API 応答",
+        "log_upload_err": "アップロード中の例外",
+        "log_parse_done": "✅ 解析完了！上の表を確認し、[確認してアップロード] をクリックしてください。",
+        "log_uploading": "アップロード中",
+        "log_records": "件のレコード",
+        "update_found_title": "新しいバージョンが利用可能です",
+        "update_found_msg": "新しいバージョンが検出されました: {version}\n\nリリースノート:\n{body}\n\n更新方法を選択してください:",
+        "update_direct": "GitHub 直接更新",
+        "update_proxy1": "プロキシ更新 (ghproxy)",
+        "update_proxy2": "プロキシ更新 (99988866)",
+        "update_custom": "カスタムプロキシURL",
+        "update_cancel": "キャンセル",
+        "update_downloading": "更新をダウンロード中...",
+        "update_download_fail": "ダウンロード失敗: {error}",
+        "custom_proxy_prompt_title": "カスタムプロキシ",
+        "custom_proxy_prompt_msg": "プロキシプレフィックスを入力してください\n(例: https://mirror.ghproxy.com/):",
+        "kv_manager_title": "Cloudflare KV マネージャー",
+        "kv_manage_btn": "KV を管理",
+        "kv_refresh": "リストを更新",
+        "kv_delete": "選択したものを削除",
+        "kv_save": "変更を保存",
+        "kv_key": "キー",
+        "kv_value": "値",
+        "kv_loading": "読み込み中...",
+        "kv_load_err": "読み込み失敗: {error}"
+    },
+    "tchinese": {
+        "window_title": "惡靈勢力2 VPK地圖解析與 Cloudflare KV 上傳工具",
+        "acc_id_label": "Account ID (帳戶ID):",
+        "acc_id_placeholder": "在此輸入 Cloudflare Account ID",
+        "ns_id_label": "Namespace ID (命名空間ID):",
+        "ns_id_placeholder": "在此輸入 Cloudflare KV Namespace ID",
+        "token_label": "API Token (API令牌):",
+        "token_placeholder": "在此輸入 Cloudflare API Token",
+        "lang_label": "介面語言 (UI Language):",
+        "save_btn": "保存配置",
+        "drag_drop_text": "將 VPK/ZIP/RAR/7z 檔案拖曳到此處\n或者點擊選擇檔案",
+        "file_dialog_title": "選擇 VPK/壓縮包 檔案",
+        "file_dialog_filter": "支援的檔案 (*.vpk *.zip *.rar *.7z);;所有檔案 (*.*)",
+        "table_col_code": "建圖代碼 (不可修改)",
+        "table_col_name": "顯示名稱 (可修改)",
+        "upload_btn": "確認修改並上傳",
+        "msg_missing_config": "請輸入 Cloudflare Account ID, Namespace ID 以及 API Token。",
+        "msg_missing_title": "缺少配置",
+        "msg_upload_success": "所有資料已成功上傳至 Cloudflare KV！",
+        "msg_success_title": "上傳成功",
+        "log_load_err": "加載配置文件失敗",
+        "log_save_ok": "配置已保存。",
+        "log_save_err": "保存配置文件失敗",
+        "log_extracting": "正在解壓",
+        "log_unsupported_archive": "不支援的壓縮包格式",
+        "log_extract_fail": "解壓失敗",
+        "log_skip_file": "跳過不支援的檔案",
+        "log_parsing": "正在解析",
+        "log_no_mission": "未找到 mission 資料",
+        "log_extract_ok": "提取成功",
+        "log_parse_err": "解析時發生錯誤",
+        "log_no_vpk": "未找到可處理的 VPK 檔案。",
+        "log_no_file": "未選擇任何檔案。",
+        "log_timeout": "警告: 部分檔案解析超時 (超過2分鐘)！已取消剩餘任務。",
+        "log_process_err": "處理檔案時發生異常",
+        "log_no_data": "未提取到任何資料。處理結束。",
+        "log_upload_ok": "成功上傳",
+        "log_upload_fail": "上傳失敗。API 返回資訊",
+        "log_upload_err": "上傳時發生異常",
+        "log_parse_done": "✅ 解析完成！請在上方表格中確認或修改名稱，確認無誤後點擊【確認修改並上傳】按鈕。",
+        "log_uploading": "正在上傳",
+        "log_records": "條記錄",
+        "update_found_title": "發現新版本",
+        "update_found_msg": "檢測到新版本: {version}\n\n更新內容:\n{body}\n\n請選擇更新方式：",
+        "update_direct": "GitHub 直連更新",
+        "update_proxy1": "國內代理更新 (ghproxy)",
+        "update_proxy2": "國內代理更新 (99988866)",
+        "update_custom": "自定義代理鏈接",
+        "update_cancel": "暫不更新",
+        "update_downloading": "正在下載更新...",
+        "update_download_fail": "下載失敗: {error}",
+        "custom_proxy_prompt_title": "自定義代理",
+        "custom_proxy_prompt_msg": "請輸入自定義代理前綴\n(例如: https://mirror.ghproxy.com/):",
+        "kv_manager_title": "Cloudflare KV 管理",
+        "kv_manage_btn": "管理 KV 列表",
+        "kv_refresh": "刷新列表",
+        "kv_delete": "刪除選中",
+        "kv_save": "保存修改",
+        "kv_key": "鍵 (Key)",
+        "kv_value": "值 (Value)",
+        "kv_loading": "正在加載...",
+        "kv_load_err": "加載失敗: {error}"
     }
 }
 
 # Add fallback translations
 for lang in ["russian", "spanish", "japanese", "tchinese"]:
-    TRANSLATIONS[lang] = TRANSLATIONS.get(lang, TRANSLATIONS["english"].copy())
-    TRANSLATIONS[lang].update(TRANSLATIONS.get("schinese" if lang == "tchinese" else "english"))
+    fallback = TRANSLATIONS.get("schinese" if lang == "tchinese" else "english").copy()
+    fallback.update(TRANSLATIONS.get(lang, {}))
+    TRANSLATIONS[lang] = fallback
 
 current_lang = "schinese"
 
@@ -246,12 +505,16 @@ class UpdateDialog(QDialog):
         self.btn_proxy2 = QPushButton(_("update_proxy2"))
         self.btn_proxy2.clicked.connect(lambda: self.start_download("proxy2"))
         
+        self.btn_custom = QPushButton(_("update_custom"))
+        self.btn_custom.clicked.connect(lambda: self.start_download("custom"))
+        
         self.btn_cancel = QPushButton(_("update_cancel"))
         self.btn_cancel.clicked.connect(self.reject)
         
         btn_layout.addWidget(self.btn_direct)
         btn_layout.addWidget(self.btn_proxy1)
         btn_layout.addWidget(self.btn_proxy2)
+        btn_layout.addWidget(self.btn_custom)
         btn_layout.addWidget(self.btn_cancel)
         
         layout.addLayout(btn_layout)
@@ -266,10 +529,21 @@ class UpdateDialog(QDialog):
             download_url = "https://mirror.ghproxy.com/" + download_url
         elif mode == "proxy2":
             download_url = "https://gh.api.99988866.xyz/" + download_url
+        elif mode == "custom":
+            text, ok = QInputDialog.getText(self, _("custom_proxy_prompt_title"), _("custom_proxy_prompt_msg"))
+            if ok and text:
+                prefix = text.strip()
+                if prefix:
+                    if not prefix.endswith("/"):
+                        prefix += "/"
+                    download_url = prefix + download_url
+            else:
+                return
             
         self.btn_direct.setEnabled(False)
         self.btn_proxy1.setEnabled(False)
         self.btn_proxy2.setEnabled(False)
+        self.btn_custom.setEnabled(False)
         self.progress.setVisible(True)
         self.progress.setValue(0)
         
