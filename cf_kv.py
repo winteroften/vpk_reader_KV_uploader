@@ -14,11 +14,7 @@ class CloudflareKV:
 
     def write_key_value(self, key, value):
         url = f"{self.base_url}/values/{key}"
-        # Value must be sent as raw string/bytes if using PUT directly, or as a JSON list if using bulk
-        # We'll use the single PUT endpoint for simplicity
-        # PUT /accounts/:account_identifier/storage/kv/namespaces/:namespace_identifier/values/:key_name
         headers = self.headers.copy()
-        # the value should be string/binary, no need to be json
         headers["Content-Type"] = "text/plain"
         response = requests.put(url, headers=headers, data=value.encode('utf-8'))
         return response.status_code == 200, response.json() if response.status_code != 200 else {}
@@ -28,3 +24,22 @@ class CloudflareKV:
         payload = [{"key": k, "value": v} for k, v in key_values.items()]
         response = requests.put(url, headers=self.headers, json=payload)
         return response.status_code == 200, response.json()
+
+    def list_keys(self):
+        url = f"{self.base_url}/keys?limit=1000"
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            return True, response.json().get("result", [])
+        return False, response.json()
+
+    def get_value(self, key):
+        url = f"{self.base_url}/values/{key}"
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            return True, response.text
+        return False, response.text
+
+    def delete_key(self, key):
+        url = f"{self.base_url}/values/{key}"
+        response = requests.delete(url, headers=self.headers)
+        return response.status_code == 200, response.json() if response.status_code != 200 else {}
