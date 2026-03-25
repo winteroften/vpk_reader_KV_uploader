@@ -17,7 +17,7 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from parser import parse_vpk
 from cf_kv import CloudflareKV
 
-VERSION = "v1.0.12"
+VERSION = "v1.0.14"
 CONFIG_FILE = "config.json"
 REPO_API = "https://api.github.com/repos/winteroften/vpk_reader_KV_uploader/releases/latest"
 
@@ -464,14 +464,26 @@ def apply_update(new_exe_path):
         
     current_exe = sys.executable
     bat_path = os.path.join(tempfile.gettempdir(), "update_l4d2_vpk.bat")
+    
+    # We need to copy the new exe to the same directory as the current one
+    # If the user is running from a protected directory, this might need admin rights
+    # We wait a bit longer (5 seconds) to ensure the original process has completely exited
+    # and all file locks (like the one PyInstaller puts on the exe) are released
     with open(bat_path, "w", encoding="utf-8") as f:
         f.write(f"""@echo off
-timeout /t 2 /nobreak > NUL
+echo Updating L4D2 VPK Reader... Please wait.
+timeout /t 5 /nobreak > NUL
 copy /y "{new_exe_path}" "{current_exe}"
+if errorlevel 1 (
+    echo Failed to copy the update. Please check if the file is in use.
+    pause
+    del "%~f0"
+    exit /b 1
+)
 start "" "{current_exe}"
 del "%~f0"
 """)
-    subprocess.Popen(bat_path, creationflags=subprocess.CREATE_NO_WINDOW)
+    subprocess.Popen(bat_path, creationflags=subprocess.CREATE_NEW_CONSOLE)
     QApplication.quit()
 
 class UpdateDialog(QDialog):
