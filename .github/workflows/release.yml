@@ -30,6 +30,9 @@ jobs:
 
       - name: Build with PyInstaller
         run: |
+          # 自动将 main.py 中的 VERSION 替换为当前的 tag 名称
+          # github.ref_name 包含了触发 workflow 的 tag 名称，如 v1.0.18
+          (Get-Content main.py) -replace 'VERSION = ".*"', 'VERSION = "${{ github.ref_name }}"' | Set-Content main.py
           pyinstaller --noconsole --onefile --name L4D2_VPK_Reader main.py
 
       - name: Create Release
